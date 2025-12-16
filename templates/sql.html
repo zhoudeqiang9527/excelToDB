@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+
+{% block title %}SQL执行{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-12">
+        <h2>SQL执行</h2>
+        <p>执行SQL语句并查看结果</p>
+        
+        <div class="card">
+            <div class="card-body">
+                <form id="sqlForm">
+                    <div class="mb-3">
+                        <label for="sqlEditor" class="form-label">SQL语句</label>
+                        <textarea class="form-control sql-editor" id="sqlEditor" name="sql" rows="8" placeholder="请输入SQL语句&#10;支持 SELECT, INSERT, CREATE TABLE 语句&#10;注意：从Excel导入的表不支持UPDATE和DELETE操作" required></textarea>
+                    </div>
+                    
+                    <button type="submit" class="btn btn-primary" id="executeBtn">执行</button>
+                    <button type="button" class="btn btn-secondary" id="clearBtn">清空</button>
+                </form>
+            </div>
+        </div>
+        
+        <div class="card mt-4 d-none" id="resultCard">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <span>执行结果</span>
+                <button class="btn btn-success btn-sm d-none" id="saveResultBtn">存为新表</button>
+            </div>
+            <div class="card-body">
+                <div id="resultInfo" class="mb-3"></div>
+                <div id="resultTableContainer"></div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ url_for('static', filename='js/sql.js') }}"></script>
+{% endblock %}

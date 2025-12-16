@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-12">
+        <h1>欢迎使用Table Control System</h1>
+        <p class="lead">这是一个基于Flask的数据管理系统，支持Excel导入、数据查询和SQL执行等功能。</p>
+        
+        <div class="row mt-5">
+            <div class="col-md-4">
+                <div class="card">
+                    <div class="card-body text-center">
+                        <h5 class="card-title">Excel上传</h5>
+                        <p class="card-text">上传Excel文件并将数据导入到数据库中</p>
+                        <a href="{{ url_for('upload_excel') }}" class="btn btn-primary">前往上传</a>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-md-4">
+                <div class="card">
+                    <div class="card-body text-center">
+                        <h5 class="card-title">字段抽取</h5>
+                        <p class="card-text">从现有表中提取指定字段创建新表</p>
+                        <a href="{{ url_for('extract_table') }}" class="btn btn-primary">开始抽取</a>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-md-4">
+                <div class="card">
+                    <div class="card-body text-center">
+                        <h5 class="card-title">SQL执行</h5>
+                        <p class="card-text">执行SQL语句并查看结果</p>
+                        <a href="{{ url_for('execute_sql') }}" class="btn btn-primary">执行SQL</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

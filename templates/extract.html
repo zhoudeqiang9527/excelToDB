@@ -1,0 +1,79 @@
+{% extends "base.html" %}
+
+{% block title %}字段抽取{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-12">
+        <h2>字段抽取</h2>
+        <p>从现有表中选择字段并应用过滤规则创建新表</p>
+        
+        <div class="card">
+            <div class="card-body">
+                <form id="extractForm">
+                    <div class="mb-3">
+                        <label for="sourceTable" class="form-label">源表</label>
+                        <select class="form-select" id="sourceTable" name="source_table" required>
+                            <option value="">请选择源表</option>
+                            <!-- 这里将通过AJAX动态加载表列表 -->
+                        </select>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label class="form-label">选择字段</label>
+                        <div id="fieldCheckboxes">
+                            <!-- 字段复选框将在这里动态生成 -->
+                            <p class="text-muted">请先选择源表以加载字段列表</p>
+                        </div>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label class="form-label">过滤规则</label>
+                        <div id="filterRules">
+                            <div class="rule-group mb-2">
+                                <div class="row">
+                                    <div class="col-md-3">
+                                        <select class="form-select field-select" name="filter_field[]">
+                                            <option value="">选择字段</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <select class="form-select operator-select" name="filter_operator[]">
+                                            <option value="=">等于</option>
+                                            <option value=">">大于</option>
+                                            <option value="<">小于</option>
+                                            <option value=">=">大于等于</option>
+                                            <option value="<=">小于等于</option>
+                                            <option value="!=">不等于</option>
+                                            <option value="like">包含</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-md-5">
+                                        <input type="text" class="form-control filter-value" name="filter_value[]" placeholder="输入值">
+                                    </div>
+                                    <div class="col-md-1">
+                                        <button type="button" class="btn btn-danger remove-rule">-</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <button type="button" class="btn btn-outline-secondary btn-sm" id="addRule">添加规则</button>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="newTableName" class="form-label">新表名</label>
+                        <input type="text" class="form-control" id="newTableName" name="new_table_name" required>
+                        <div class="form-text">新表名将自动加上前缀 extract_ 和时间戳</div>
+                    </div>
+                    
+                    <button type="submit" class="btn btn-primary">创建新表</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ url_for('static', filename='js/extract.js') }}"></script>
+{% endblock %}
