@@ -1,6 +1,38 @@
 $(document).ready(function() {
+    let editor;
+    
+    // 初始化CodeMirror编辑器
+    const textarea = document.getElementById('sqlEditor');
+    if (textarea) {
+        editor = CodeMirror.fromTextArea(textarea, {
+            mode: 'text/x-mysql',
+            theme: 'material-darker',
+            lineNumbers: true,
+            indentWithTabs: true,
+            smartIndent: true,
+            autofocus: true,
+            extraKeys: {
+                "Ctrl-Space": "autocomplete",
+                "Ctrl-Q": function(cm){ cm.foldCode(cm.getCursor()); },
+                "Ctrl-J": "toMatchingTag"
+            },
+            hintOptions: {
+                tables: {
+                    users: ["id", "name", "email", "age", "created_at"],
+                    products: ["id", "name", "price", "category", "stock"],
+                    orders: ["id", "user_id", "product_id", "quantity", "order_date"],
+                    customers: ["id", "company", "contact", "address", "phone"]
+                }
+            },
+            foldGutter: true,
+            gutters: ["CodeMirror-linenumbers", "CodeMirror-foldgutter"]
+        });
+        
+        // 设置编辑器高度
+        editor.setSize(null, 300);
+    }
+
     const sqlForm = $('#sqlForm');
-    const sqlEditor = $('#sqlEditor');
     const resultCard = $('#resultCard');
     const resultInfo = $('#resultInfo');
     const resultTableContainer = $('#resultTableContainer');
@@ -8,11 +40,11 @@ $(document).ready(function() {
     const executeBtn = $('#executeBtn');
     const clearBtn = $('#clearBtn');
     
-    let lastExecutedSql = '';
-    
     // 清空按钮事件
     clearBtn.on('click', function() {
-        sqlEditor.val('');
+        if (editor) {
+            editor.setValue('');
+        }
         resultCard.addClass('d-none');
     });
     
@@ -20,7 +52,7 @@ $(document).ready(function() {
     sqlForm.on('submit', function(e) {
         e.preventDefault();
         
-        const sql = sqlEditor.val().trim();
+        const sql = editor ? editor.getValue().trim() : $('#sqlEditor').val().trim();
         if (!sql) {
             alert('请输入SQL语句');
             return;
@@ -37,7 +69,6 @@ $(document).ready(function() {
             data: JSON.stringify({sql: sql}),
             success: function(response) {
                 if (response.success) {
-                    lastExecutedSql = sql;
                     showResult(response);
                 } else {
                     showError(response.error);
@@ -159,13 +190,16 @@ $(document).ready(function() {
     saveResultBtn.on('click', function() {
         const tableName = prompt('请输入新表名:');
         if (tableName) {
+            // 获取当前编辑器中的SQL语句
+            const sql = editor ? editor.getValue().trim() : $('#sqlEditor').val().trim();
+            
             // 发送保存请求
             $.ajax({
                 url: '/sql/save_result',
                 type: 'POST',
                 contentType: 'application/json',
                 data: JSON.stringify({
-                    original_sql: lastExecutedSql,
+                    original_sql: sql,
                     new_table_name: tableName
                 }),
                 success: function(response) {

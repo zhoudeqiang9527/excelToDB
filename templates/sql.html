@@ -2,6 +2,22 @@
 
 {% block title %}SQL执行{% endblock %}
 
+{% block head %}
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/codemirror.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/theme/material-darker.min.css">
+<style>
+    .CodeMirror {
+        height: auto;
+        min-height: 200px;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+    }
+    .CodeMirror-scroll {
+        min-height: 200px;
+    }
+</style>
+{% endblock %}
+
 {% block content %}
 <div class="row">
     <div class="col-md-12">
@@ -13,7 +29,7 @@
                 <form id="sqlForm">
                     <div class="mb-3">
                         <label for="sqlEditor" class="form-label">SQL语句</label>
-                        <textarea class="form-control sql-editor" id="sqlEditor" name="sql" rows="8" placeholder="请输入SQL语句&#10;支持 SELECT, INSERT, CREATE TABLE 语句&#10;注意：从Excel导入的表不支持UPDATE和DELETE操作" required></textarea>
+                        <textarea class="form-control" id="sqlEditor" name="sql" rows="8" placeholder="请输入SQL语句&#10;支持 SELECT, INSERT, CREATE TABLE 语句&#10;注意：从Excel导入的表不支持UPDATE和DELETE操作" required></textarea>
                     </div>
                     
                     <button type="submit" class="btn btn-primary" id="executeBtn">执行</button>
@@ -37,5 +53,10 @@
 {% endblock %}
 
 {% block scripts %}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/codemirror.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/mode/sql/sql.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/addon/hint/show-hint.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/addon/hint/sql-hint.min.js"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/addon/hint/show-hint.min.css">
 <script src="{{ url_for('static', filename='js/sql.js') }}"></script>
 {% endblock %}
