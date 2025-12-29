@@ -1,3 +1,4 @@
+import yaml
 from flask import Flask, render_template, request, jsonify, redirect, url_for, flash
 from flask_sqlalchemy import SQLAlchemy
 import os
@@ -7,20 +8,27 @@ from werkzeug.utils import secure_filename
 from datetime import datetime
 import re
 
+# 从YAML配置文件中加载配置
+def load_config():
+    with open('config.yml', 'r', encoding='utf-8') as file:
+        return yaml.safe_load(file)
+
+config_data = load_config()
+
 # Flask应用配置
 app = Flask(__name__)
-app.config['SECRET_KEY'] = 'your-secret-key-here'
-app.config['UPLOAD_FOLDER'] = 'uploads'
-app.config['MAX_CONTENT_LENGTH'] = 50 * 1024 * 1024  # 50MB max file size
+app.config['SECRET_KEY'] = config_data['flask']['secret_key']
+app.config['UPLOAD_FOLDER'] = config_data['flask']['upload_folder']
+app.config['MAX_CONTENT_LENGTH'] = config_data['flask']['max_content_length']
 
-# 数据库配置 (需要根据实际情况修改)
-app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql://username:password@localhost/table_control'
-app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+# 数据库配置
+app.config['SQLALCHEMY_DATABASE_URI'] = config_data['database']['uri']
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = config_data['database']['track_modifications']
 
 db = SQLAlchemy(app)
 
-# 允许的文件扩展名
-ALLOWED_EXTENSIONS = {'xlsx'}
+# 从配置文件获取允许的文件扩展名
+ALLOWED_EXTENSIONS = set(config_data['allowed_extensions'])
 
 # 检查文件扩展名
 def allowed_file(filename):
@@ -317,4 +325,8 @@ def save_sql_result():
     })
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(
+        debug=config_data['app']['debug'],
+        host=config_data['app']['host'],
+        port=config_data['app']['port']
+    )

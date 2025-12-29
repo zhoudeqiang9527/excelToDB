@@ -1,0 +1,21 @@
+# Flask应用配置
+flask:
+  secret_key: "your-secret-key-here"
+  upload_folder: "uploads"
+  max_content_length: 52428800  # 50MB in bytes
+
+# 数据库配置
+database:
+  # SQLite数据库配置
+  uri: "sqlite:///store.db"
+  track_modifications: false
+
+# 允许的文件扩展名
+allowed_extensions:
+  - "xlsx"
+
+# 其他配置
+app:
+  debug: true
+  host: "127.0.0.1"
+  port: 5000
